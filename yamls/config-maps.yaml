@@ -1,0 +1,120 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-properties
+data:
+  app-name: order
+  app-version: 1.0.0
+  team: engineering
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+data:
+  nginx.conf: |
+    server {
+        listen       80;
+        server_name  localhost;
+
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+        }
+
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+
+        location /health {
+            access_log off;
+            return 200 "healthy\n";
+        }
+    }
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-map
+spec:
+  selector:
+    matchLabels:
+      app: config-map
+  template:
+    metadata:
+      labels:
+        app: config-map
+    spec:
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+        - name: app-properties
+          configMap:
+            name: app-properties
+        - name: config
+          projected:
+            sources:
+              - configMap:
+                  name: nginx-conf
+              - configMap:
+                  name: app-properties
+      containers:
+      - name: config-map-volume
+        volumeMounts:
+          - mountPath: /etc/order/ngnix
+            name: nginx-conf
+          - mountPath: /etc/order/properties
+            name: app-properties
+          - mountPath: /etc/order/config
+            name: config
+        image: busybox
+        command:
+          - "/bin/sh"
+          - "-c"
+        args:
+          - "sleep 3600"
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+      - name: config-map-env
+        image: busybox
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        command:
+          - "/bin/sh"
+          - "-c"
+        args:
+          - "env && sleep 3600"
+        env:
+          - name: APP_VERSION
+            valueFrom:
+              configMapKeyRef:
+                name: app-properties
+                key: app-version
+          - name: APP_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: app-properties
+                key: app-name
+          - name: TEAM
+            valueFrom:
+              configMapKeyRef:
+                name: app-properties
+                key: team  
+          - name: NGINX_CONF
+            valueFrom:
+              configMapKeyRef:
+                name: nginx-conf
+                key: nginx.conf  

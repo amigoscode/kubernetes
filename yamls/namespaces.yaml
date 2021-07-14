@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: engineering
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tooling
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ml
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: logging

@@ -1,0 +1,93 @@
+<html>
+
+<head>
+    <title>Learn Kubernetes</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: rgb(255, 208, 0);
+            color: white;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .container {
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            display: -webkit-box;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        #kube-logo {
+            width: 250px;
+            height: auto;
+        }
+
+        #amigoscode-logo {
+            width: 140px;
+            height: auto;
+        }
+
+        .row {
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rotate {
+            animation: rotation 20s infinite linear;
+        }
+
+        @keyframes rotation {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(359deg);
+            }
+
+            a {
+                color: white;
+                background-color: transparent;
+                text-decoration: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <iframe src="https://giphy.com/embed/GeimqsH0TLDt4tScGw" width="480" height="320" frameBorder="0"
+            class="giphy-embed" allowFullScreen></iframe>
+        <p><a href="https://giphy.com/gifs/vibes-vibing-vibin-GeimqsH0TLDt4tScGw"></a></p>
+        <h1>Kubernetes is Awesome</h1>
+        <div class="row">
+            <img class="rotate" id="kube-logo"
+                src="https://user-images.githubusercontent.com/40702606/113492770-ec643d00-94d1-11eb-9301-5d21d36a435d.png"
+                alt="Kubernetes Logo">
+            <img id="amigoscode-logo"
+                src="https://user-images.githubusercontent.com/40702606/113493313-19b2ea00-94d6-11eb-95d2-47c88785721c.png" />
+        </div>
+
+        <a href="https://amigoscode.com/courses">By amigoscode.com</p>
+        <p>version: 3</p>
+    </div>
+
+</body>
+</html>

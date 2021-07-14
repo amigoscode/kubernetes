@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mypv
+spec:
+  capacity:
+    storage: "100Mi"
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: manual
+  hostPath:
+    path: "/mnt/data"
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mypvc
+  namespace: engineering
+spec:
+  resources:
+    requests:
+      storage: "100Mi"
+  volumeMode: Filesystem
+  storageClassName: "manual"
+  accessModes:
+    - ReadWriteOnce
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pv-pvc
+  namespace: engineering
+spec:
+  selector:
+    matchLabels:
+      app: pv-pvc
+  template:
+    metadata:
+      labels:
+        app: pv-pvc
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mypvc
+      containers:
+      - name: pv-pvc
+        image: nginx
+        volumeMounts:
+          - mountPath: "/usr/share/nginx/html"
+            name: data
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: pv-pvc
+  namespace: engineering
+spec:
+  type: LoadBalancer
+  selector:
+    app: pv-pvc
+  ports:
+  - port: 80
+    targetPort: 80
+
